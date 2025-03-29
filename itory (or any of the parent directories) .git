@@ -1,0 +1,145 @@
+[33mcommit 1da31d1d64d69c451e852bf27d0e411d08d9076a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Ntwitm <18274691708@163.com>
+Date:   Sat Mar 29 13:53:10 2025 +0800
+
+    test
+
+[33mcommit 30ec343d8e1dd024412aec3f5a86f1b02c251f1f[m[33m ([m[1;31morigin/master[m[33m)[m
+Merge: ce4d9ee 47763c2
+Author: Ntwitm <18274691708@163.com>
+Date:   Sat Mar 29 13:36:56 2025 +0800
+
+    Merge branch 'master' of https://gitee.com/ntwitm/sky-take-out
+    
+    # Conflicts:
+    #       pom.xml
+    #       sky-common/pom.xml
+    #       sky-common/src/main/java/com/sky/constant/MessageConstant.java
+    #       sky-common/src/main/java/com/sky/utils/AliOssUtil.java
+    #       sky-common/src/main/java/com/sky/utils/WeChatPayUtil.java
+    #       sky-server/pom.xml
+    #       sky-server/src/main/java/com/sky/config/WebMvcConfiguration.java
+    #       sky-server/src/main/java/com/sky/controller/admin/EmployeeController.java
+    #       sky-server/src/main/java/com/sky/handler/GlobalExceptionHandler.java
+    #       sky-server/src/main/java/com/sky/interceptor/JwtTokenAdminInterceptor.java
+    #       sky-server/src/main/java/com/sky/mapper/EmployeeMapper.java
+    #       sky-server/src/main/java/com/sky/service/EmployeeService.java
+    #       sky-server/src/main/java/com/sky/service/impl/EmployeeServiceImpl.java
+    #       sky-server/src/main/resources/application-dev.yml
+    #       sky-server/src/main/resources/application.yml
+    #       sky-server/src/main/resources/mapper/EmployeeMapper.xml
+
+[33mcommit ce4d9ee783c6733e63ae51ab8d13bbfbf110a4ee[m
+Author: Ntwitm <18274691708@163.com>
+Date:   Sat Mar 29 13:27:04 2025 +0800
+
+    初始化项目
+
+[33mcommit 47763c24157a393adc6cc01da495a3acc898c893[m
+Merge: 7dde426 22c0df7
+Author: Ntwitm <18274691708@163.com>
+Date:   Sat Mar 29 13:05:13 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 7dde426c305b75ddc38840dbe59d3062157c6f81[m
+Merge: 49c2948 25b6843
+Author: Ntwitm <18274691708@163.com>
+Date:   Sat Mar 29 13:03:36 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 22c0df78fbd825bf7a0a0e48fc17e3336869a4f2[m
+Merge: 49c2948 25b6843
+Author: Ntwitm <18274691708@163.com>
+Date:   Sat Mar 29 13:03:36 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 49c2948fedb7638147a74b5d1516c2bb15ef16ca[m
+Merge: 5841ccf 0aac668
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Sun Mar 23 12:25:30 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 25b68435cb581b446d9e2c9660375e71354f0a74[m
+Merge: 5841ccf 0aac668
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Sun Mar 23 12:25:30 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 5841ccf92ad9416e8d7d95041f3ec2d691c86b9b[m
+Merge: f00728e 99c7040
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Sun Mar 23 09:50:25 2025 +0800
+
+    修改员工账号使用情况
+
+[33mcommit 0aac668b379e2342b0a6679fba879248f6245c9f[m
+Merge: f00728e 99c7040
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Sun Mar 23 09:50:25 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit f00728e3e53376d608d0d75cff6f3afd9934d935[m
+Merge: d3c93a9 1e09e39
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Sat Mar 22 14:40:44 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 99c7040d88804059518cd8954ff1cd4ff6259bc8[m
+Merge: d3c93a9 1e09e39
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Sat Mar 22 14:40:44 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit d3c93a9bd77be328407dd77e27438b507d450f0e[m
+Merge: 1c28c18 2ef8497
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Fri Mar 21 14:12:34 2025 +0800
+
+    对jsonFormat注解写了一个转换器
+
+[33mcommit 1e09e396fecbc48fd08688c7ccdfc956dcad2e47[m
+Merge: 1c28c18 2ef8497
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Fri Mar 21 14:12:34 2025 +0800
+
+    对jsonFormat注解写了一个转换器
+
+[33mcommit 1c28c18813dd8d36de261de13cbf825909041159[m
+Merge: 37f8a49 beae712
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Fri Mar 21 14:04:38 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 2ef84979154820b7d7658b1b70d222d671ecbb72[m
+Merge: 37f8a49 beae712
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Fri Mar 21 14:04:38 2025 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 37f8a49b68cfbe935bbf37ba6417170c1d6ad703[m
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Wed Mar 19 09:08:15 2025 +0800
+
+    后端初始环境
+
+[33mcommit beae712e3a954c6bc58cf2c610edf56862bf60e9[m
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Wed Mar 19 09:08:15 2025 +0800
+
+    后端初始环境
+
+[33mcommit 41a620695309989d1c809002248580c433f5aa8b[m
+Author: vacontinuejatotired <18274691708@example.com>
+Date:   Tue Mar 18 20:10:41 2025 +0800
+
+    test1
