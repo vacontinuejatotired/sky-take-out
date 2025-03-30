@@ -9,6 +9,8 @@ import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface DishMapper {
 
@@ -30,6 +32,8 @@ public interface DishMapper {
 
     @Delete("delete from dish where id =#{id};")
     void deleteById(Long id);
+
+    void deleteByIdConnections(List<Long> ids);
 
 //    @Update("update dish set status = #{disable} where id=#{id}")
 //    void setStatus(@Param("disable") Integer disable, @Param("id") Long id);

@@ -71,10 +71,12 @@ public class Dishimpl implements DishService {
             throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
         }
         //开始删除
-        for (Long id : ids) {
-            dishMapper.deleteById(id);
-            dishFlavorsMapper.deleteById(id);
-        }
+//        for (Long id : ids) {
+//            dishMapper.deleteById(id);
+//            dishFlavorsMapper.deleteById(id);
+//        }
+        dishMapper.deleteByIdConnections(ids);
+        dishFlavorsMapper.deleteByIdConnections(ids);
     }
 
 //    @Override
