@@ -7,9 +7,7 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface DishMapper {
@@ -26,4 +24,13 @@ public interface DishMapper {
     void saveWithFal(Dish dish);
 
     Page<DishVO> pageQuery(DishPageQueryDTO dishDTO);
+
+    @Select("select * from sky_take_out.dish where id = #{id}")
+    Dish getById(Long id);
+
+    @Delete("delete from dish where id =#{id};")
+    void deleteById(Long id);
+
+//    @Update("update dish set status = #{disable} where id=#{id}")
+//    void setStatus(@Param("disable") Integer disable, @Param("id") Long id);
 }

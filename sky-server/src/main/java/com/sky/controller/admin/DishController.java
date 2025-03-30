@@ -10,8 +10,11 @@ import com.sky.service.DishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -34,4 +37,21 @@ public class DishController {
         PageResult pageResult=dishService.pageQuery(dishDTO);
         return Result.success(pageResult);
     }
+
+    @ApiOperation("批量删除菜品")
+    @DeleteMapping("/delete")
+    public Result delete(@RequestParam List<Long> ids) {
+        log.info("delete:{}", ids);
+        dishService.deleteAll(ids);
+        return Result.success();
+    }
+
+//    @ApiOperation("修改菜品售卖状态")
+//    @PostMapping( "/status/{status}")
+//    public Result changeStatus(@PathVariable("status") Long status){
+//        log.info("Meal changeStatus:{}", status);
+    //没有传id给我，改不了
+//        dishService.changeStatus(id);
+//        return Result.success();
+//    }
 }
