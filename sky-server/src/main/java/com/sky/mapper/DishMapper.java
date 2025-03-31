@@ -35,6 +35,9 @@ public interface DishMapper {
 
     void deleteByIdConnections(List<Long> ids);
 
+    @AutoFill(value = OperationType.INSERT)
+    void update(Dish dish);
+
 //    @Update("update dish set status = #{disable} where id=#{id}")
 //    void setStatus(@Param("disable") Integer disable, @Param("id") Long id);
 }

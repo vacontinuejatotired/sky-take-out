@@ -79,6 +79,31 @@ public class Dishimpl implements DishService {
         dishFlavorsMapper.deleteByIdConnections(ids);
     }
 
+    @Override
+    public DishVO getById(Long id) {
+        Dish dish= dishMapper.getById(id);
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish,dishVO);
+        List<DishFlavor> flavors = dishFlavorsMapper.selectByDishId(id);
+        dishVO.setFlavors(flavors);
+        return dishVO;
+    }
+
+    @Override
+    @Transactional
+    public void update(DishDTO dishDTO) {
+        Dish dish=new Dish();
+        BeanUtils.copyProperties(dishDTO,dish);
+        dishMapper.update(dish);
+        dishFlavorsMapper.deleteById(dishDTO.getId());
+        List<DishFlavor> flavors=dishDTO.getFlavors();
+        if (flavors!=null&&flavors.size()>0) {
+            flavors.forEach(flavor-> flavor.setDishId(dishDTO.getId()));
+            dishFlavorsMapper.saveAll(flavors);
+        }
+
+    }
+
 //    @Override
 //    public void changeStatus(Long id) {
 //        // 1. 查询当前状态
