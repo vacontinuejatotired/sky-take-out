@@ -72,6 +72,22 @@ public class Setmeallmpl implements SetMealService {
 
     @Override
     public void deleteById(Long ids) {
+    Setmeal setmeal=setmealMapper.getBySetmealId(ids);
+    if(setmeal==null){
+        throw new SetmealEnableFailedException(MessageConstant.UNKNOWN_ERROR);
+    }
+        try {
+            setmealMapper.deleteSetmeal(ids);
+            setmealMapper.seleteSetmealDish(ids);
+            log.info("删除套餐事务提交{}", setmeal.getId());
+        } catch (Exception e) {
+            log.info("fail to delete setmeal");
+            throw new RuntimeException(e);
+        }
+    }
 
+    @Override
+    public void updateSetmeal(SetmealDTO setmealDTO) {
+        
     }
 }
