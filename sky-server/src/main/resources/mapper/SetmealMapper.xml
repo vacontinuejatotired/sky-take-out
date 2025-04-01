@@ -7,6 +7,8 @@
         values (#{categoryId},#{name},#{price},#{status},#{description},#{image},#{createTime},#{updateTime},#{createUser},#{updateUser})
     </insert>
     <insert id="saveSetmealDish" >
+        insert into sky_take_out.setmeal_dish (setmeal_id, dish_id, name, price, copies)
+        VALUES
         <foreach collection="setmealDishes" item="st" separator=",">
             insert into sky_take_out.setmeal_dish (setmeal_id, dish_id, name, price, copies)
             VALUES (#{st.setmealId},#{st.dishId},#{st.name},#{st.price},#{st.copies})
