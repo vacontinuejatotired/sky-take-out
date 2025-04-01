@@ -104,6 +104,12 @@ public class Dishimpl implements DishService {
 
     }
 
+    @Override
+    public List<Dish> listById(Long categoryId) {
+        List<Dish> dish=dishMapper.getListDishByCategoryId(categoryId);
+        return dish;
+    }
+
 //    @Override
 //    public void changeStatus(Long id) {
 //        // 1. 查询当前状态

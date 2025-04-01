@@ -38,6 +38,8 @@ public interface DishMapper {
     @AutoFill(value = OperationType.INSERT)
     void update(Dish dish);
 
+    List<Dish> getListDishByCategoryId(Long categoryId);
+
 //    @Update("update dish set status = #{disable} where id=#{id}")
 //    void setStatus(@Param("disable") Integer disable, @Param("id") Long id);
 }
