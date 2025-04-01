@@ -46,9 +46,21 @@ public class Setmeallmpl implements SetMealService {
     @Transactional
     public void saveSetmeal(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
-        BeanUtils.copyProperties(setmealDTO,setmeal);
-        setmealMapper.saveSetmeal(setmeal);
-        setmealMapper.saveSetmealDish(setmealDTO.getSetmealDishes());
+        BeanUtils.copyProperties(setmealDTO, setmeal);
+        try {
+            setmealMapper.saveSetmeal(setmeal);
+            log.info("插入后套餐ID: {}", setmeal.getId());
+            // 2. 绑定套餐ID并保存菜品
+            List<SetmealDish> dishes = setmealDTO.getSetmealDishes();
+            if (dishes != null && !dishes.isEmpty()) {
+                dishes.forEach(dish -> dish.setSetmealId(setmeal.getId())); // 关键：设置关联ID
+                setmealMapper.saveSetmealDish(dishes); // 批量插入
+            }
+            log.info("事务提交成功");
+        } catch (Exception e) {
+            log.error("事务提交失败", e);
+            throw e;
+        }
     }
 
     @Override
