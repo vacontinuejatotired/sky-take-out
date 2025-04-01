@@ -35,6 +35,9 @@
         </where>
         order by d.create_time desc
     </select>
+    <select id="getListDishByCategoryId" resultType="com.sky.entity.Dish">
+        select * from sky_take_out.dish where category_id=#{categoryId}
+    </select>
     <update id="update" >
         update dish<set>
         <if test="name!=null">
