@@ -35,7 +35,7 @@ public interface DishMapper {
 
     void deleteByIdConnections(List<Long> ids);
 
-    @AutoFill(value = OperationType.INSERT)
+    @AutoFill(value = OperationType.UPDATE)
     void update(Dish dish);
 
     List<Dish> getListDishByCategoryId(Long categoryId);

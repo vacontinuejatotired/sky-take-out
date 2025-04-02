@@ -20,7 +20,7 @@ public class SetMealController {
     @Autowired
     private SetMealService setMealService;
 
-    @GetMapping("/dish/{id}")
+    @GetMapping("/{id}")
     @ApiOperation("查找套餐")
     public Result<SetmealVO> getById(@PathVariable Long id) {
         //传进来的是setmeal表的主键id
@@ -45,11 +45,27 @@ public class SetMealController {
         PageResult pageResult=setMealService.pageQuery(setmealPageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * nmd,前端给你指定方法，就不要在路径里写delete路径，除非多个删除方法
+     * cnmd
+     * @param ids
+     * @return
+     */
     @ApiOperation("删除套餐")
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public Result delete(Long ids) {
         log.info("delete {}",ids);
         setMealService.deleteById(ids);
         return Result.success();
     }
+
+    @ApiOperation("修改套餐")
+    @PutMapping
+    public Result update(@RequestBody SetmealDTO setmealDTO) {
+        log.info("update {}",setmealDTO);
+        setMealService.updateSetmeal(setmealDTO);
+        return Result.success();
+    }
+
 }

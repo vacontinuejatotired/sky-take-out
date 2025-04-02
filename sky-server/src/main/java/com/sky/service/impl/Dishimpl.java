@@ -74,7 +74,7 @@ public class Dishimpl implements DishService {
 //        for (Long id : ids) {
 //            dishMapper.deleteById(id);
 //            dishFlavorsMapper.deleteById(id);
-//        }
+//        }//
         dishMapper.deleteByIdConnections(ids);
         dishFlavorsMapper.deleteByIdConnections(ids);
     }
