@@ -37,8 +37,8 @@ public class Userimpl implements UserService {
                     .openid(openid)
                     .createTime(LocalDateTime.now())
                     .build();
+            userMapper.insert(user);
         }
-        userMapper.insert(user);
         return user;
     }
     public String getOpenid(String code) {
