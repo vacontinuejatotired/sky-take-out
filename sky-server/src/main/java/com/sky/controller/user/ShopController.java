@@ -19,8 +19,13 @@ public class ShopController {
     @GetMapping("/status")
     @ApiOperation("查询店铺营业状态")
     public Result getStatus() {
-        Integer status = (Integer) redisTemplate.opsForValue().get("SHOP_STATUS");
-        log.info("当前店铺状态{}",status == 1?"营业中":"打烊中");
+        Integer status = null;
+        try {
+            status = (Integer) redisTemplate.opsForValue().get("SHOP_STATUS");
+            log.info("当前店铺状态{}",status == 1?"营业中":"打烊中");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return Result.success(status);
     }
 }
