@@ -1,17 +1,22 @@
 package com.sky.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.mapper.*;
+import com.sky.result.PageResult;
 import com.sky.service.OrdersService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -125,6 +130,30 @@ public class Orderimpl implements OrdersService {
                 .build();
 
         ordersMapper.update(orders);
+    }
+
+    @Override
+    public PageResult pageQuery(int pages, int pageSize, Integer status) {
+        PageHelper.startPage(pages,pageSize);
+        OrdersPageQueryDTO ordersPageQueryDTO=new OrdersPageQueryDTO();
+        ordersPageQueryDTO.setPage(pages);
+        ordersPageQueryDTO.setPageSize(pageSize);
+        ordersPageQueryDTO.setStatus(status);
+        ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
+
+        Page<Orders>page=ordersMapper.pageQuery(ordersPageQueryDTO);
+        List<OrderVO>list=new ArrayList<>();
+        if(page!=null&&page.getTotal()>0){
+            for (Orders orders : page) {
+                Long orderId = orders.getId();
+                List<OrderDetail> orderDetails=orderDetailMapper.getByOrderid(orderId);
+                OrderVO orders1=new OrderVO();
+                BeanUtils.copyProperties(orders,orders1);
+                orders1.setOrderDetailList(orderDetails);
+                list.add(orders1);
+            }
+        }
+        return new PageResult(page.getTotal(),list);
     }
 
 }

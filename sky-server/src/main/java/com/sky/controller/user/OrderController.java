@@ -2,8 +2,10 @@ package com.sky.controller.user;
 
 import com.sky.context.BaseContext;
 import com.sky.dto.OrdersDTO;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrdersService;
 import com.sky.vo.OrderPaymentVO;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Api("订单接口")
@@ -45,5 +49,13 @@ public class OrderController {
         OrderPaymentVO orderPaymentVO = ordersService.payment(ordersPaymentDTO);
         log.info("生成预支付交易单：{}", orderPaymentVO);
         return Result.success(orderPaymentVO);
+    }
+
+    @GetMapping("/historyOrders")
+    @ApiOperation("查询历史订单")
+    public Result<PageResult> pageOrders(int page, int pageSize, Integer status) {
+    log.info("用户查询历史" );
+    PageResult list=ordersService.pageQuery(page,pageSize,status);
+    return Result.success(list);
     }
 }
