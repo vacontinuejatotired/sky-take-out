@@ -20,5 +20,8 @@ public interface OrdersMapper {
     @Select("select * from orders where number = #{orderNumber}")
     Orders getByNumber(String orderNumber);
 
+    @Select("select * from orders where id=#{id}")
+    Orders getById(Long id);
+
     Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
 }

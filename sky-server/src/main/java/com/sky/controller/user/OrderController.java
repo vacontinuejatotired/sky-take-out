@@ -1,8 +1,6 @@
 package com.sky.controller.user;
 
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersDTO;
-import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.result.PageResult;
@@ -15,11 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @Api("订单接口")
@@ -57,5 +51,13 @@ public class OrderController {
     log.info("用户查询历史" );
     PageResult list=ordersService.pageQuery(page,pageSize,status);
     return Result.success(list);
+    }
+
+    @GetMapping("/orderDetail/{id}")
+    @ApiOperation("查询订单详情")
+    public Result<OrderVO> orderDetail(@PathVariable Long id) {
+        log.info("用户{}查询订单详情",id);
+        OrderVO orderVO=ordersService.selectOrderDetail(id);
+        return Result.success(orderVO);
     }
 }
