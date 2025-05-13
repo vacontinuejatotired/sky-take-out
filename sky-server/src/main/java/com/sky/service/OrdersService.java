@@ -19,4 +19,6 @@ public interface OrdersService {
     OrderVO selectOrderDetail(Long id);
 
     void cancelById(Long id);
+
+    void submitAgain(Long id);
 }

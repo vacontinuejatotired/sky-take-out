@@ -194,4 +194,24 @@ public class Orderimpl implements OrdersService {
         ordersMapper.update(ordersDB);
     }
 
+    @Override
+    @Transactional
+    public void submitAgain(Long id) {
+        Orders ordersDB = ordersMapper.getById(id);
+        if(ordersDB==null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        ordersDB.setOrderTime(LocalDateTime.now());
+        ordersDB.setId(null);
+        ordersDB.setStatus(Orders.TO_BE_CONFIRMED);
+        ordersDB.setPayStatus(Orders.UN_PAID);
+        ordersMapper.insert(ordersDB);
+        List<OrderDetail>orderDetails=orderDetailMapper.getByOrderid(id);
+        for (OrderDetail orderDetail : orderDetails) {
+            orderDetail.setOrderId(ordersDB.getId());
+            BeanUtils.copyProperties(ordersDB,orderDetail);
+        }
+        orderDetailMapper.insertBatch(orderDetails);
+    }
+
 }
