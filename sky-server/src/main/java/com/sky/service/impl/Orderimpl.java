@@ -10,6 +10,7 @@ import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
+import com.sky.exception.OrderBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
 import com.sky.service.OrdersService;
@@ -17,6 +18,8 @@ import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ import java.util.List;
 
 @Service
 public class Orderimpl implements OrdersService {
+    private static final Logger log = LoggerFactory.getLogger(Orderimpl.class);
     @Autowired
     private OrdersMapper ordersMapper;
 
@@ -43,6 +47,7 @@ public class Orderimpl implements OrdersService {
 
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+
     @Transactional
     public OrderSubmitVO submit(OrdersSubmitDTO ordersSubmitDTO) {
         AddressBook addressBookMapperById = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
@@ -50,7 +55,7 @@ public class Orderimpl implements OrdersService {
             throw new AddressBookBusinessException(MessageConstant.ADDRESS_BOOK_IS_NULL);
         }
         ShoppingCart shoppingCart=new ShoppingCart();
-        shoppingCart.setId(BaseContext.getCurrentId());
+        shoppingCart.setUserId(BaseContext.getCurrentId());
         List<ShoppingCart>shoppingCarts=shoppingCartMapper.List(shoppingCart);
         if(shoppingCarts==null||shoppingCarts.size()==0){
             throw new AddressBookBusinessException(MessageConstant.SHOPPING_CART_IS_NULL);
@@ -110,7 +115,9 @@ public class Orderimpl implements OrdersService {
         jsonObject.put("code","ORDERPAID");
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
         vo.setPackageStr(jsonObject.getString("package"));
-        Orders orders=Orders.builder().id(userId).checkoutTime(LocalDateTime.now()).payStatus(Orders.PAID).status(Orders.TO_BE_CONFIRMED).build();
+        Orders orders1=ordersMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
+        Orders orders=Orders.builder().id(orders1.getId()).checkoutTime(LocalDateTime.now()).payStatus(Orders.PAID).status(Orders.TO_BE_CONFIRMED).build();
+        System.out.println(orders);
         ordersMapper.update(orders);
         return vo;
     }
@@ -165,6 +172,26 @@ public class Orderimpl implements OrdersService {
         BeanUtils.copyProperties(orders,orderVO);
         orderVO.setOrderDetailList(orderDetailList);
         return orderVO;
+    }
+
+    @Override
+    public void cancelById(Long id) {
+        Orders ordersDB = ordersMapper.getById(id);
+        if(ordersDB==null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        if(ordersDB.getStatus()>2){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        if(ordersDB.getPayStatus().equals(Orders.UN_PAID)){
+            ordersDB.setPayStatus(Orders.REFUND);
+        }
+        if(ordersDB.getStatus().equals(Orders.TO_BE_CONFIRMED)){
+            ordersDB.setStatus(Orders.CANCELLED);
+        }
+        ordersDB.setCancelTime(LocalDateTime.now());
+        ordersDB.setCancelReason("用户取消订单");
+        ordersMapper.update(ordersDB);
     }
 
 }
