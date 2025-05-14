@@ -16,8 +16,10 @@ import com.sky.result.PageResult;
 import com.sky.service.OrdersService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -68,6 +70,7 @@ public class Orderimpl implements OrdersService {
         orders.setStatus(Orders.PENDING_PAYMENT);
         orders.setPayStatus(Orders.UN_PAID);
         orders.setPhone(addressBookMapperById.getPhone());
+        orders.setAddress(addressBookMapperById.getProvinceName()+addressBookMapperById.getCityName()+addressBookMapperById.getDistrictName());
         orders.setConsignee(addressBookMapperById.getConsignee());
         orders.setUserId(BaseContext.getCurrentId());
         orders.setOrderTime(LocalDateTime.now());
@@ -118,7 +121,6 @@ public class Orderimpl implements OrdersService {
         vo.setPackageStr(jsonObject.getString("package"));
         Orders orders1=ordersMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
         Orders orders=Orders.builder().id(orders1.getId()).checkoutTime(LocalDateTime.now()).payStatus(Orders.PAID).status(Orders.TO_BE_CONFIRMED).build();
-        System.out.println(orders);
         ordersMapper.update(orders);
         return vo;
     }
@@ -141,12 +143,12 @@ public class Orderimpl implements OrdersService {
     }
 
     @Override
-    public PageResult pageQuery(int pages, int pageSize, Integer status) {
-        PageHelper.startPage(pages,pageSize);
+    public PageResult pageQuery(OrdersPageQueryDTO ordersPageQueryDTO1) {
+        PageHelper.startPage(ordersPageQueryDTO1.getPage(), ordersPageQueryDTO1.getPageSize());
         OrdersPageQueryDTO ordersPageQueryDTO=new OrdersPageQueryDTO();
-        ordersPageQueryDTO.setPage(pages);
-        ordersPageQueryDTO.setPageSize(pageSize);
-        ordersPageQueryDTO.setStatus(status);
+        ordersPageQueryDTO.setPage(ordersPageQueryDTO1.getPage());
+        ordersPageQueryDTO.setPageSize(ordersPageQueryDTO1.getPageSize());
+        ordersPageQueryDTO.setStatus(ordersPageQueryDTO1.getStatus());
         ordersPageQueryDTO.setUserId(BaseContext.getCurrentId());
 
         Page<Orders>page=ordersMapper.pageQuery(ordersPageQueryDTO);
@@ -218,6 +220,40 @@ public class Orderimpl implements OrdersService {
 
         // 将购物车对象批量添加到数据库
         shoppingCartMapper.insertBatch(shoppingCartList);
+    }
+
+    @Override
+    public OrderStatisticsVO getStatisticsVo() {
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        orderStatisticsVO.setConfirmed(ordersMapper.coutStatus(Orders.CONFIRMED));
+        orderStatisticsVO.setToBeConfirmed(ordersMapper.coutStatus(Orders.TO_BE_CONFIRMED));
+        orderStatisticsVO.setDeliveryInProgress(ordersMapper.coutStatus(Orders.DELIVERY_IN_PROGRESS));
+        return orderStatisticsVO;
+    }
+
+    @Override
+    public PageResult searchList(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+        Page<Orders>orders=ordersMapper.pageQuery(ordersPageQueryDTO);
+        List<OrderVO>list=new ArrayList<>();
+        if(orders!=null&&orders.getTotal()>0){
+            for (Orders order : orders) {
+                OrderVO orders1=new OrderVO();
+                BeanUtils.copyProperties(order,orders1);
+                List<OrderDetail>orderDetailList=orderDetailMapper.getByOrderid(order.getId());
+                orders1.setOrderDetailList(orderDetailList);
+                String orderDishes=null;
+                for(OrderDetail orderDetail:orderDetailList){
+                    orderDishes+=orderDishes;
+                }
+                orders1.setOrderDishes(orderDishes);
+                list.add(orders1);
+            }
+        }
+        else{
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        return new PageResult(orders.getTotal(),list);
     }
 
 }

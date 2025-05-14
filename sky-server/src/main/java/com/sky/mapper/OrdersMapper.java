@@ -24,4 +24,7 @@ public interface OrdersMapper {
     Orders getById(Long id);
 
     Page<Orders> pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    @Select("select count(id) from sky_take_out.orders where status=#{status}")
+    Integer coutStatus(Integer status);
 }
