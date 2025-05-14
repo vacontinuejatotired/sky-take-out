@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.result.PageResult;
@@ -7,11 +8,13 @@ import com.sky.result.Result;
 import com.sky.service.OrdersService;
 import com.sky.vo.OrderOverViewVO;
 import com.sky.vo.OrderStatisticsVO;
+import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,5 +43,14 @@ public class OrderController {
         orderStatisticsVO=ordersService.getStatisticsVo();
         return Result.success(orderStatisticsVO);
     }
+
+    @ApiOperation("查询订单详细")
+    @GetMapping("/details/{id}")
+    public Result<OrderVO> details(@PathVariable("id") Long id) {
+        log.info("商家{}查询订单详细", BaseContext.getCurrentId());
+        OrderVO orderVO=ordersService.selectOrderDetail(id);
+        return Result.success(orderVO);
+    }
+
 
 }
