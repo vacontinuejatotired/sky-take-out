@@ -65,4 +65,19 @@ public class OrderController {
         ordersService.rejectOrder(ordersRejectionDTO);
         return Result.success();
     }
+
+    @ApiOperation("派送订单")
+    @PutMapping("/delivery/{id}")
+    public Result delivery(@PathVariable("id") Long id) {
+        log.info("订单{}派送",id);
+        ordersService.delivery(id);
+        return Result.success();
+    }
+
+    @ApiOperation("完成订单")
+    @PutMapping("/complete/{id}")
+    public Result complete(@PathVariable("id") Long id) {
+        ordersService.complete(id);
+        return Result.success();
+    }
 }

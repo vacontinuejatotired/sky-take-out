@@ -282,4 +282,33 @@ public class Orderimpl implements OrdersService {
 
     }
 
+    @Override
+    public void delivery(Long id) {
+        Orders ordersDB = ordersMapper.getById(id);
+        if(ordersDB==null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        if(!ordersDB.getStatus().equals(Orders.CONFIRMED)){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        ordersDB.setStatus(Orders.DELIVERY_IN_PROGRESS);
+        ordersMapper.update(ordersDB);
+    }
+
+    @Override
+    public void complete(Long id) {
+        Orders ordersDB = ordersMapper.getById(id);
+        if(ordersDB==null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        if(!ordersDB.getStatus().equals(Orders.DELIVERY_IN_PROGRESS)){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        Orders orders = new Orders();
+        orders.setId(BaseContext.getCurrentId());
+        orders.setDeliveryTime(LocalDateTime.now());
+        orders.setStatus(Orders.COMPLETED);
+        ordersMapper.update(orders);
+    }
+
 }
