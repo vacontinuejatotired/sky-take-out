@@ -4,6 +4,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.dto.OrdersDTO;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrdersService;
@@ -55,6 +56,13 @@ public class OrderController {
     public Result confirm(@RequestBody OrdersDTO ordersDTO) {
         log.info("商家{}接单", BaseContext.getCurrentId());
         ordersService.confirm(ordersDTO.getId());
+        return Result.success();
+    }
+
+    @ApiOperation("拒单")
+    @PutMapping("/rejection")
+    public Result rejection(@RequestBody OrdersRejectionDTO ordersRejectionDTO) {
+        ordersService.rejectOrder(ordersRejectionDTO);
         return Result.success();
     }
 }

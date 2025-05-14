@@ -5,9 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersPaymentDTO;
-import com.sky.dto.OrdersSubmitDTO;
+import com.sky.dto.*;
 import com.sky.entity.*;
 import com.sky.exception.AddressBookBusinessException;
 import com.sky.exception.OrderBusinessException;
@@ -267,6 +265,21 @@ public class Orderimpl implements OrdersService {
         }
         ordersDB.setStatus(Orders.CONFIRMED);
         ordersMapper.update(ordersDB);
+    }
+
+    @Override
+    public void rejectOrder(OrdersRejectionDTO ordersRejectionDTO) {
+        Orders ordersDB = ordersMapper.getById(ordersRejectionDTO.getId());
+        if(ordersDB==null||!ordersDB.getStatus().equals(Orders.TO_BE_CONFIRMED)){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        log.info("商家{}请求退款",BaseContext.getCurrentId());
+            BeanUtils.copyProperties(ordersRejectionDTO,ordersDB);
+            ordersDB.setStatus(Orders.CANCELLED);
+            ordersDB.setCancelTime(LocalDateTime.now());
+            ordersDB.setRejectionReason(ordersRejectionDTO.getRejectionReason());
+            ordersMapper.update(ordersDB);
+
     }
 
 }
