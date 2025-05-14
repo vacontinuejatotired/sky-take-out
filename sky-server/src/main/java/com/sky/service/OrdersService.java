@@ -28,4 +28,6 @@ public interface OrdersService {
     OrderStatisticsVO getStatisticsVo();
 
     PageResult searchList(OrdersPageQueryDTO ordersPageQueryDTO);
+
+    void confirm(Long id);
 }

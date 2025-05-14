@@ -256,4 +256,17 @@ public class Orderimpl implements OrdersService {
         return new PageResult(orders.getTotal(),list);
     }
 
+    @Override
+    public void confirm(Long id) {
+        Orders ordersDB = ordersMapper.getById(id);
+        if(ordersDB==null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        if(ordersDB.getStatus()>2){
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        ordersDB.setStatus(Orders.CONFIRMED);
+        ordersMapper.update(ordersDB);
+    }
+
 }
