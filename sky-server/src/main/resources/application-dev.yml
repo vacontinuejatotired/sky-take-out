@@ -18,4 +18,7 @@ sky:
   wechat:
     appid: wxd2dcd6f7a04d45ac
     secret: c0b175920c6d78ebc15c623eff5c56da
-
+  shop:
+    address: 长沙理工大学金盆岭校区
+  baidu:
+    ak: uJeB24jwFOWCnARndqbMNwn8CA7CHAcL
