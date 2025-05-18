@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Mapper
 public interface OrdersMapper {
 
@@ -27,4 +30,7 @@ public interface OrdersMapper {
 
     @Select("select count(id) from sky_take_out.orders where status=#{status}")
     Integer coutStatus(Integer status);
+
+    @Select("select * from sky_take_out.orders where status=#{status} and order_time <=#{now}")
+    List<Orders> getByStatusAndTimeLt(int status, LocalDateTime now);
 }
