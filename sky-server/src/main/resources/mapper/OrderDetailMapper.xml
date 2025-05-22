@@ -29,4 +29,16 @@
     <select id="getByOrderid" resultType="com.sky.entity.OrderDetail">
 select * from sky_take_out.order_detail where order_id=#{orderId}
     </select>
+    <select id="getTop10SellingDishes" resultType="com.sky.dto.GoodsSalesDTO">
+        SELECT
+            name,
+            SUM(number) AS quantity
+        FROM
+            order_detail
+        GROUP BY
+            name
+        ORDER BY
+            quantity DESC
+        LIMIT 10;
+    </select>
 </mapper>

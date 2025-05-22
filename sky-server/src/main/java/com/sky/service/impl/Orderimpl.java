@@ -20,6 +20,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.webSocket.WebSocketServer;
 import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,9 @@ private String ak;
 
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Transactional
     public OrderSubmitVO submit(OrdersSubmitDTO ordersSubmitDTO) {
@@ -130,6 +134,7 @@ private String ak;
         Orders orders1=ordersMapper.getByNumber(ordersPaymentDTO.getOrderNumber());
         Orders orders=Orders.builder().id(orders1.getId()).checkoutTime(LocalDateTime.now()).payStatus(Orders.PAID).status(Orders.TO_BE_CONFIRMED).build();
         ordersMapper.update(orders);
+        paySuccess(ordersPaymentDTO.getOrderNumber());
         return vo;
     }
 
@@ -148,6 +153,12 @@ private String ak;
                 .build();
 
         ordersMapper.update(orders);
+        Map map=new HashMap();
+        map.put("type","1");
+        map.put("orderId",orders.getId());
+        map.put("content","订单号"+outTradeNo);
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
     }
 
     @Override
@@ -315,10 +326,24 @@ private String ak;
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
         Orders orders = new Orders();
-        orders.setId(BaseContext.getCurrentId());
+        orders.setId(id);
         orders.setDeliveryTime(LocalDateTime.now());
         orders.setStatus(Orders.COMPLETED);
         ordersMapper.update(orders);
+    }
+
+    @Override
+    public void reminder(Long id) {
+        Orders ordersDB = ordersMapper.getById(id);
+        if(ordersDB==null){
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        Map map=new HashMap();
+        map.put("type","2");
+        map.put("orderId",ordersDB.getId());
+        map.put("content","订单号"+ordersDB.getNumber());
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
     }
 
     private void checkOutOfRange(String address) {

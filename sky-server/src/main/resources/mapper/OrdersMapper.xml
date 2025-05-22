@@ -84,4 +84,18 @@
         </where>
         order by order_time desc
     </select>
+    <select id="coutMoneyByMap" resultType="java.lang.Double">
+        select sum(orders.amount) from sky_take_out.orders
+        <where>
+            <if test="begin!=null">
+              and  checkout_time &gt;=#{begin}
+            </if>
+        <if test="end!=null">
+            and checkout_time&lt;=#{end}
+        </if>
+        <if test="status!=null">
+           and status=#{status}
+        </if>
+        </where>
+    </select>
 </mapper>
