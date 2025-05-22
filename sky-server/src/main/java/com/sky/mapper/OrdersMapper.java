@@ -37,4 +37,6 @@ public interface OrdersMapper {
     Double coutMoneyByMap(Map map);
 
     Integer countUserByMap(Map map);
+
+    Integer getOrderCountByMap(Map map);
 }

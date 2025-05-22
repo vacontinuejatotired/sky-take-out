@@ -6,9 +6,11 @@ import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrdersMapper;
 import com.sky.result.Result;
 import com.sky.service.TurnoverService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class Reportimpl implements TurnoverService {
     @Autowired
     private OrdersMapper ordersMapper;
@@ -120,5 +123,70 @@ public class Reportimpl implements TurnoverService {
                 .dateList(StringUtils.join(localDateList,','))
                 .totalUserList(StringUtils.join(totalUserList,','))
                 .build();
+    }
+
+    @Override
+    public OrderReportVO getOrderReport(LocalDate begin, LocalDate end) {
+        List<LocalDate> localDateList = new ArrayList<>();
+        localDateList.add(begin);
+        while (!begin.equals(end)) {
+            begin = begin.plusDays(1);
+            localDateList.add(begin);
+        }
+        List<Integer>totalOrderList = new ArrayList<>();
+        List<Integer>validOrderList = new ArrayList<>();
+        Integer totalOrderCount=0;
+        Integer validOrderCount=0;
+
+        for (LocalDate localDate : localDateList) {
+//            LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
+//            LocalDateTime endTime = LocalDateTime.of(localDate, LocalTime.MAX);
+//            Integer total=getTotalOrderCount(beginTime,endTime,null);
+//            totalOrderList.add(total);
+//            Integer totalValid=getTotalOrderCount(beginTime,endTime,Orders.COMPLETED);
+//            validOrderList.add(totalValid);
+//            totalOrderCount+=total;
+//            validOrderCount+=totalValid;
+            LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(localDate, LocalTime.MAX);
+
+            // 总订单数查询
+            Integer total = 0;
+            try {
+                total = getTotalOrderCount(beginTime, endTime, null);
+            } catch (Exception e) {
+                log.error("查询日期 {} 的总订单数失败", localDate, e);
+                // 失败时记录为 0 或其他默认值
+            }
+            totalOrderList.add(total);
+            totalOrderCount += total;
+
+            // 有效订单数查询
+            Integer totalValid = 0;
+            try {
+                totalValid = getTotalOrderCount(beginTime, endTime, Orders.COMPLETED);
+            } catch (Exception e) {
+                log.error("查询日期 {} 的有效订单数失败", localDate, e);
+                // 失败时记录为 0 或其他默认值
+            }
+            validOrderList.add(totalValid);
+            validOrderCount += totalValid;
+        }
+        Double orderCompletionRate=(validOrderCount==0)?0.0:(double)validOrderCount/totalOrderCount;
+        return OrderReportVO.builder()
+                .validOrderCount(validOrderCount)
+                .validOrderCountList(StringUtils.join(validOrderList,','))
+                .orderCountList(StringUtils.join(totalOrderList,','))
+                .orderCompletionRate(orderCompletionRate)
+                .totalOrderCount(totalOrderCount)
+                .dateList(StringUtils.join(localDateList,','))
+                .build();
+    }
+    public Integer getTotalOrderCount(LocalDateTime begin, LocalDateTime end,Integer status) {
+        Map map=new HashMap();
+        map.put("begin", begin);
+        map.put("end", end);
+        map.put("status", status);
+        return ordersMapper.getOrderCountByMap(map);
     }
 }

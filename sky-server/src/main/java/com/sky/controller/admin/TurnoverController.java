@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.result.Result;
 import com.sky.service.TurnoverService;
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
@@ -45,4 +46,10 @@ public class TurnoverController {
     }
 
 
+    @ApiOperation("订单统计")
+    @GetMapping("/ordersStatistics")
+    public Result<OrderReportVO> getOrderReport(@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate begin
+            ,@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate end){
+        return Result.success(turnoverService.getOrderReport(begin,end));
+    }
 }
