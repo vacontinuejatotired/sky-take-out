@@ -4,6 +4,7 @@ import com.sky.result.Result;
 import com.sky.service.TurnoverService;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -35,4 +36,13 @@ public class TurnoverController {
             ,@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate end){
         return Result.success(turnoverService.getTop10Stastics(begin,end));
     }
+
+    @ApiOperation("用户数据查询")
+    @GetMapping("/userStatistics")
+    public Result<UserReportVO> getUserReport(@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate begin
+            ,@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate end) {
+        return Result.success(turnoverService.getUserReport(begin,end));
+    }
+
+
 }

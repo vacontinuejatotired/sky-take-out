@@ -8,6 +8,7 @@ import com.sky.result.Result;
 import com.sky.service.TurnoverService;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,35 @@ public class Reportimpl implements TurnoverService {
         return SalesTop10ReportVO.builder()
                 .nameList(StringUtils.join(nameList, ','))
                 .numberList(StringUtils.join(numberList, ','))
+                .build();
+    }
+
+    @Override
+    public UserReportVO getUserReport(LocalDate begin, LocalDate end) {
+        List<LocalDate> localDateList = new ArrayList<>();
+        localDateList.add(begin);
+        while (!begin.equals(end)) {
+            begin = begin.plusDays(1);
+            localDateList.add(begin);
+        }
+        List<Integer>totalUserList = new ArrayList<>();
+        List<Integer>newUserList = new ArrayList<>();
+        for (LocalDate localDate : localDateList) {
+            LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
+            LocalDateTime endTime = LocalDateTime.of(localDate, LocalTime.MAX);
+            Map map=new HashMap();
+            map.put("end", beginTime);
+            Integer total=ordersMapper.countUserByMap(map);
+            map.put("end", endTime);
+            map.put("begin", beginTime);
+            Integer newTotal=ordersMapper.countUserByMap(map);
+            totalUserList.add(total);
+            newUserList.add(newTotal);
+        }
+        return UserReportVO.builder()
+                .newUserList(StringUtils.join(newUserList,','))
+                .dateList(StringUtils.join(localDateList,','))
+                .totalUserList(StringUtils.join(totalUserList,','))
                 .build();
     }
 }
