@@ -261,11 +261,13 @@ private String ak;
                 BeanUtils.copyProperties(order,orders1);
                 List<OrderDetail>orderDetailList=orderDetailMapper.getByOrderid(order.getId());
                 orders1.setOrderDetailList(orderDetailList);
-                String orderDishes=null;
+                StringBuilder orderDishes=new StringBuilder();
                 for(OrderDetail orderDetail:orderDetailList){
-                    orderDishes+=orderDishes;
+                    orderDishes.append(orderDetail.getName()+" ");
                 }
-                orders1.setOrderDishes(orderDishes);
+                if (orderDishes != null) {
+                    orders1.setOrderDishes(orderDishes.toString());
+                }
                 list.add(orders1);
             }
         }
