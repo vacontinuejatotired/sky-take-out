@@ -30,15 +30,26 @@
 select * from sky_take_out.order_detail where order_id=#{orderId}
     </select>
     <select id="getTop10SellingDishes" resultType="com.sky.dto.GoodsSalesDTO">
-        SELECT
-            name,
-            SUM(number) AS quantity
-        FROM
-            order_detail
-        GROUP BY
-            name
-        ORDER BY
-            quantity DESC
-        LIMIT 10;
+        select
+        od.name,
+        sum(od.number) number
+        from
+        order_detail od,
+        orders o
+        where
+        od.order_id = o.id
+        and o.status = 5
+        <if test="begin != null">
+            and o.order_time &gt; #{begin}
+        </if>
+        <if test="end != null">
+            and o.order_time &lt;#{end}
+        </if>
+        group by
+        od.name
+        order by
+        number desc
+        limit 0,10
     </select>
+
 </mapper>

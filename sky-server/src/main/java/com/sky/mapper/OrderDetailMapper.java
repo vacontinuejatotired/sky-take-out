@@ -18,5 +18,5 @@ public interface OrderDetailMapper {
     @Delete("delete from sky_take_out.order_detail where order_id =#{id}")
     void deleteByOrderId(Long id);
 
-    List<GoodsSalesDTO> getTop10SellingDishes(LocalDateTime of, LocalDateTime of1);
+    List<GoodsSalesDTO> getTop10SellingDishes(LocalDateTime begin, LocalDateTime end);
 }

@@ -2,6 +2,7 @@ package com.sky.controller.admin;
 
 import com.sky.result.Result;
 import com.sky.service.TurnoverService;
+import com.sky.service.WorkspaceService;
 import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 
 @Slf4j
@@ -51,5 +53,10 @@ public class TurnoverController {
     public Result<OrderReportVO> getOrderReport(@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate begin
             ,@DateTimeFormat(pattern = "yyyy-MM-dd")LocalDate end){
         return Result.success(turnoverService.getOrderReport(begin,end));
+    }
+    @GetMapping("/export")
+    @ApiOperation("导出运营数据报表")
+    public void exportBusinessData(HttpServletResponse response) {
+        turnoverService.exportBusinessData(response);
     }
 }
